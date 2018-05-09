@@ -18,10 +18,10 @@ int main()
 {
 	srand(time(0));
 	int gridSize = (rand() % 5) + 3;
-	int randXA = (rand() % gridSize) + 1;
-	int randYA = (rand() % gridSize) + 1;
-	int randXB = (rand() % gridSize) + 1;
-	int randYB = (rand() % gridSize) + 1;
+	int randXA = (rand() % gridSize);
+	int randYA = (rand() % gridSize);
+	int randXB = (rand() % gridSize);
+	int randYB = (rand() % gridSize);
 	int counter = 0; 
 	int flip = 1;
 	std::cout << "grid: " << gridSize << "x" << gridSize << std::endl;
@@ -45,13 +45,14 @@ int main()
 		if (search.y == pointB.y && search.x == pointB.x)
 		{
 			point foundB (search.x, search.y);
-			std::cout << "Point b has been found at:" << "(" << foundB.x << "," << foundB.y << ")" << std::endl;
+			std::cout << "Point B has been found at:" << "(" << foundB.x << "," << foundB.y << ")" << std::endl;
+			counter = abs(foundB.x - pointA.x) + abs(foundB.y - pointA.y);
 			break;
 		}
 		flip *= -1;
 		search.y += 1;
-
 	}	
+	std::cout << "The shortest number of moves from point A to point B is: " << counter << std::endl;
 	return (0);
 }
 
