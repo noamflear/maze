@@ -4,6 +4,7 @@
 #include <cstdlib> 
 #include <iostream>
 
+	int count = 0;
 class point {
 public:
 	int x;
@@ -17,6 +18,50 @@ public:
 			return true;
 		}
 		return false;
+	}
+	bool findX(point blockPoint, point finalPoint){
+		int dir; 
+		if (this->x > finalPoint.x){
+			dir = -1;
+		}
+		else {
+			dir = 1;
+		}
+		while(this->x != finalPoint.x){
+			this->x += 1 * dir;
+			count += 1;
+			if (count >= 10){
+				break;
+			}
+			if (this->x == blockPoint.x && this->y == blockPoint.y){
+				this->x -= 1 * dir;
+				count -= 1;
+				this->findY(blockPoint, finalPoint);
+			}
+		}
+		return true;
+	}
+	bool findY(point blockPoint, point finalPoint){
+		int dir; 
+		if (this->y > finalPoint.y){
+			dir = -1;
+		}
+		else {
+			dir = 1;
+		}
+		while(this->y != finalPoint.y){
+			this->y += 1 * dir;
+			count += 1;
+			if (count >= 10){
+				break;
+			}
+			if (this->y == blockPoint.y && this->x == blockPoint.x){
+				this->y -= 1 * dir;
+				count -= 1;
+				this->findX(blockPoint, finalPoint);
+			}
+		}
+		return true;
 	}
 };
 
@@ -40,8 +85,9 @@ int main()
 	std::cout << "B coordinate: (" << randXB << "," << randYB << ")" << std::endl;
 
 	point pointA (randXA, randYA);
-	point pointB (0, 4);
+	point pointB (randXB, randYB);
 	point search (0, 0);
+	point foundB (0,0);	
 	//Find a random place for the blocker
 	for (int i = 0; i <= numOfBlocks; i++){
 		blockX = (rand() % gridSize);
@@ -50,6 +96,7 @@ int main()
 		while ((blockX == pointA.x && blockY == pointA.y) || (blockX == pointB.x && blockY == pointB.y)){ 
 			blockX = (rand() % gridSize);
 		}
+		std::cout << "Block coordinate: (" << blockX << "," << blockY << ")" << std::endl;
 	}
 	point blocker (blockX, blockY);
 	//Look for point B using the search point
@@ -58,12 +105,12 @@ int main()
 		while(search.x <= gridSize)
 		{
 			search.x += 1; 
-			std::cout << "Point at:" << "(" << search.x << "," << search.y << ")" << std::endl;
 			if (search.samePoint(pointB)){
-				point foundB (search.x, search.y);	
+				foundB.x = search.x;
+				foundB.y = search.y;
 				std::cout << "Point B has been found at:" << "(" << foundB.x << "," << foundB.y << ")" << std::endl;
-				counter = abs(foundB.x - pointA.x) + abs(foundB.y - pointA.y);
-				std::cout << "The shortest number of moves from point A to point B is: " << counter << std::endl;
+				//counter = abs(foundB.x - pointA.x) + abs(foundB.y - pointA.y);
+				//std::cout << "The shortest number of moves from point A to point B is: " << counter << std::endl;
 				foundPoint = true;
 				break;
 			}
@@ -77,8 +124,16 @@ int main()
 		search.y += 1;
 		search.x = -1;
 	}	
+	search.x = randXA;
+	search.y = randYA;
+	while(search.findX(blocker, foundB) == false || search.findY(blocker, foundB) == false)
+	{
+		search.findX(blocker, foundB);
+		search.findY(blocker, foundB);
+	}
+	std::cout << "The shortest number of moves from point A to point B is: " << count << std::endl;	
 	if (foundPoint == false){
-	std::cout << "No pathway has been found" << std::endl;
+		std::cout << "No pathway has been found" << std::endl;
 	}
 	return (0);
 }
