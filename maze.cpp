@@ -112,7 +112,8 @@ int main()
 				//counter = abs(foundB.x - pointA.x) + abs(foundB.y - pointA.y);
 				//std::cout << "The shortest number of moves from point A to point B is: " << counter << std::endl;
 				foundPoint = true;
-				break;
+				goto pickle;
+				//break;
 			}
 			if (foundPoint == true){
 				break;
@@ -123,7 +124,8 @@ int main()
 		}
 		search.y += 1;
 		search.x = -1;
-	}	
+	}
+	pickle:	
 	search.x = randXA;
 	search.y = randYA;
 	while(search.findX(blocker, foundB) == false || search.findY(blocker, foundB) == false)
