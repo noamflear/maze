@@ -12,6 +12,12 @@ public:
 	this->x = xPoint;
 	this->y = yPoint;
 	}
+	bool samePoint(point testPoint){
+		if (this->y == testPoint.y && this->x == testPoint.x){
+			return true;
+		}
+		return false;
+	}
 };
 
 int main() 
@@ -22,37 +28,55 @@ int main()
 	int randYA = (rand() % gridSize);
 	int randXB = (rand() % gridSize);
 	int randYB = (rand() % gridSize);
+	int numOfBlocks = (rand() % 2) + 1;
 	int counter = 0; 
 	int flip = 1;
+	bool foundPoint = false;
+
+	std::cout << "numOfBlocks: " << numOfBlocks << std::endl;
 	std::cout << "grid: " << gridSize << "x" << gridSize << std::endl;
 	std::cout << "A coordinate: (" << randXA << "," << randYA << ")" << std::endl;
 	std::cout << "B coordinate: (" << randXB << "," << randYB << ")" << std::endl;
+
 	point pointA (randXA, randYA);
 	point pointB (randXB, randYB);
-	point search (randXA, randYA);
-	while (search.x != 0){
-		search.x -= 1; 
-	}
-	while (search.y != 0){
-		search.y -= 1; 
-	}
-	for (int i = 0; i <= gridSize; i++)
-	{
-		while(search.y != pointB.y && search.x != pointB.x && search.x <= gridSize)
-		{
-			search.x += 1 * flip; 
+	point search (0, 0);
+	//Find a random place for the blocker
+	for (int i = 0; i <= numOfBlocks; i++){
+		int blockX = (rand() % gridSize);
+		int blockY = (rand() % gridSize);
+		//Make sure the blocker isnt on either point A or B
+		while ((blockX == pointA.x && blockY == pointA.y) || (blockX == pointB.x && blockY == pointB.y)){ 
+			blockX = (rand() % gridSize);
 		}
-		if (search.y == pointB.y && search.x == pointB.x)
+	}
+	//Look for point B using the search point
+	while(search.y <= gridSize)
+	{
+		while(search.x <= gridSize)
 		{
-			point foundB (search.x, search.y);
-			std::cout << "Point B has been found at:" << "(" << foundB.x << "," << foundB.y << ")" << std::endl;
-			counter = abs(foundB.x - pointA.x) + abs(foundB.y - pointA.y);
+			search.x += 1; 
+			if (search.samePoint(pointB)){
+				point foundB (search.x, search.y);	
+				std::cout << "Point B has been found at:" << "(" << foundB.x << "," << foundB.y << ")" << std::endl;
+				counter = abs(foundB.x - pointA.x) + abs(foundB.y - pointA.y);
+				std::cout << "The shortest number of moves from point A to point B is: " << counter << std::endl;
+				foundPoint = true;
+				break;
+			}
+			if (foundPoint == true){
+				break;
+			}
+		}
+		if (foundPoint == true){
 			break;
 		}
-		flip *= -1;
 		search.y += 1;
+		search.x = 0;
 	}	
-	std::cout << "The shortest number of moves from point A to point B is: " << counter << std::endl;
+	if (foundPoint == false){
+	std::cout << "No pathway has been found" << std::endl;
+	}
 	return (0);
 }
 
