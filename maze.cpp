@@ -32,30 +32,33 @@ int main()
 	int counter = 0; 
 	int flip = 1;
 	bool foundPoint = false;
-
+	int blockX; 
+	int blockY;
 	std::cout << "numOfBlocks: " << numOfBlocks << std::endl;
 	std::cout << "grid: " << gridSize << "x" << gridSize << std::endl;
 	std::cout << "A coordinate: (" << randXA << "," << randYA << ")" << std::endl;
 	std::cout << "B coordinate: (" << randXB << "," << randYB << ")" << std::endl;
 
 	point pointA (randXA, randYA);
-	point pointB (randXB, randYB);
+	point pointB (0, 4);
 	point search (0, 0);
 	//Find a random place for the blocker
 	for (int i = 0; i <= numOfBlocks; i++){
-		int blockX = (rand() % gridSize);
-		int blockY = (rand() % gridSize);
+		blockX = (rand() % gridSize);
+		blockY = (rand() % gridSize);
 		//Make sure the blocker isnt on either point A or B
 		while ((blockX == pointA.x && blockY == pointA.y) || (blockX == pointB.x && blockY == pointB.y)){ 
 			blockX = (rand() % gridSize);
 		}
 	}
+	point blocker (blockX, blockY);
 	//Look for point B using the search point
 	while(search.y <= gridSize)
 	{
 		while(search.x <= gridSize)
 		{
 			search.x += 1; 
+			std::cout << "Point at:" << "(" << search.x << "," << search.y << ")" << std::endl;
 			if (search.samePoint(pointB)){
 				point foundB (search.x, search.y);	
 				std::cout << "Point B has been found at:" << "(" << foundB.x << "," << foundB.y << ")" << std::endl;
@@ -72,7 +75,7 @@ int main()
 			break;
 		}
 		search.y += 1;
-		search.x = 0;
+		search.x = -1;
 	}	
 	if (foundPoint == false){
 	std::cout << "No pathway has been found" << std::endl;
